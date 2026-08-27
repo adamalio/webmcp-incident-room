@@ -7,6 +7,7 @@ import {
 } from "../../src/domain/incident-machine";
 import type { Dispatch } from "react";
 import { getIncidentTools } from "../../src/tools/registry";
+import { createQuerySignalsHandler } from "../../src/tools/query-signals";
 
 describe("start and inspect tracer", () => {
   it("returns the INVALID_STATE envelope when inspection is idle", () => {
@@ -75,7 +76,7 @@ describe("start and inspect tracer", () => {
     expect(dispatch).toHaveBeenCalledOnce();
   });
 
-  it("exposes exactly the three investigating tools without Tracer 2 query annotations", () => {
+  it("exposes exactly the three investigating tools", () => {
     const tools = getIncidentTools("investigating", {});
 
     expect(tools.map((tool) => tool.name)).toEqual([
@@ -83,9 +84,6 @@ describe("start and inspect tracer", () => {
       "query_signals",
       "propose_mitigation",
     ]);
-    expect(
-      tools.find((tool) => tool.name === "query_signals")?.annotations,
-    ).toBe(undefined);
     const executionOptions = { signal: new AbortController().signal };
     expect(
       tools
@@ -97,5 +95,61 @@ describe("start and inspect tracer", () => {
         .find((tool) => tool.name === "propose_mitigation")
         ?.execute({}, executionOptions),
     ).toMatchObject({ ok: false });
+  });
+});
+
+describe("bounded signal tracer", () => {
+  it("lets cancellation win over an invalid-state branch before dispatch", () => {
+    const controller = new AbortController();
+    const dispatch = vi.fn();
+    const handler = createQuerySignalsHandler(() => {
+      controller.abort();
+      return createInitialIncidentState();
+    }, dispatch);
+
+    expect(() =>
+      handler(
+        {
+          incidentId: "inc_checkout_20260827_001",
+          signal: "metrics",
+          limit: 1,
+        },
+        { signal: controller.signal },
+      ),
+    ).toThrow(expect.objectContaining({ name: "AbortError" }));
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
+  it("publishes a strict bounded query schema and both trust annotations", () => {
+    const query = getIncidentTools("investigating", {}).find(
+      (tool) => tool.name === "query_signals",
+    );
+
+    expect(query?.annotations).toEqual({
+      readOnlyHint: true,
+      untrustedContentHint: true,
+    });
+    expect(query?.inputSchema).toMatchObject({
+      oneOf: [
+        {
+          properties: {
+            signal: { const: "metrics" },
+            service: { const: "checkout-api" },
+          },
+        },
+        {
+          properties: {
+            signal: { const: "traces" },
+            service: { const: "pricing" },
+          },
+        },
+        {
+          properties: {
+            signal: { const: "logs" },
+            service: { const: "checkout-api" },
+          },
+        },
+      ],
+    });
   });
 });

@@ -5,6 +5,7 @@ import {
   inspectIncidentResultSchema,
   proposeMitigationInputSchema,
   querySignalsInputSchema,
+  querySignalsResultSchema,
   toolFailureResultSchema,
 } from "../src/domain/schemas.ts";
 
@@ -22,6 +23,7 @@ const schemas = [
     "tool-results.schema.json",
     {
       inspect_incident: z.toJSONSchema(inspectIncidentResultSchema),
+      query_signals: z.toJSONSchema(querySignalsResultSchema),
       failure: z.toJSONSchema(toolFailureResultSchema),
     },
   ],

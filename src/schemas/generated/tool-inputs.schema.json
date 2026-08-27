@@ -16,42 +16,98 @@
   },
   "query_signals": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "type": "object",
-    "properties": {
-      "incidentId": {
-        "type": "string",
-        "const": "inc_checkout_20260827_001"
+    "oneOf": [
+      {
+        "type": "object",
+        "properties": {
+          "incidentId": {
+            "type": "string",
+            "const": "inc_checkout_20260827_001",
+            "description": "The canonical synthetic incident ID."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "description": "Maximum evidence rows to return, from 1 through 20."
+          },
+          "signal": {
+            "type": "string",
+            "const": "metrics"
+          },
+          "service": {
+            "type": "string",
+            "const": "checkout-api"
+          }
+        },
+        "required": [
+          "incidentId",
+          "limit",
+          "signal"
+        ],
+        "additionalProperties": false
       },
-      "signal": {
-        "type": "string",
-        "enum": [
-          "metrics",
-          "traces",
-          "logs"
-        ]
+      {
+        "type": "object",
+        "properties": {
+          "incidentId": {
+            "type": "string",
+            "const": "inc_checkout_20260827_001",
+            "description": "The canonical synthetic incident ID."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "description": "Maximum evidence rows to return, from 1 through 20."
+          },
+          "signal": {
+            "type": "string",
+            "const": "traces"
+          },
+          "service": {
+            "type": "string",
+            "const": "pricing"
+          }
+        },
+        "required": [
+          "incidentId",
+          "limit",
+          "signal"
+        ],
+        "additionalProperties": false
       },
-      "service": {
-        "type": "string",
-        "enum": [
-          "edge",
-          "checkout-api",
-          "pricing",
-          "payments",
-          "orders-db"
-        ]
-      },
-      "limit": {
-        "type": "integer",
-        "minimum": 1,
-        "maximum": 20
+      {
+        "type": "object",
+        "properties": {
+          "incidentId": {
+            "type": "string",
+            "const": "inc_checkout_20260827_001",
+            "description": "The canonical synthetic incident ID."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "description": "Maximum evidence rows to return, from 1 through 20."
+          },
+          "signal": {
+            "type": "string",
+            "const": "logs"
+          },
+          "service": {
+            "type": "string",
+            "const": "checkout-api"
+          }
+        },
+        "required": [
+          "incidentId",
+          "limit",
+          "signal"
+        ],
+        "additionalProperties": false
       }
-    },
-    "required": [
-      "incidentId",
-      "signal",
-      "limit"
-    ],
-    "additionalProperties": false
+    ]
   },
   "propose_mitigation": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",

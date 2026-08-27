@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   inspectIncidentInputSchema,
   inspectIncidentResultSchema,
+  querySignalsInputSchema,
 } from "../../src/domain/schemas";
 
 describe("start and inspect tracer", () => {
@@ -91,5 +92,75 @@ describe("start and inspect tracer", () => {
         )
         .map(({ name }) => name),
     ).toEqual([]);
+  });
+});
+
+describe("bounded signal query schema", () => {
+  it.each([
+    [
+      "metrics without service",
+      { incidentId: "inc_checkout_20260827_001", signal: "metrics", limit: 20 },
+    ],
+    [
+      "metrics checkout",
+      {
+        incidentId: "inc_checkout_20260827_001",
+        signal: "metrics",
+        service: "checkout-api",
+        limit: 1,
+      },
+    ],
+    [
+      "logs checkout",
+      {
+        incidentId: "inc_checkout_20260827_001",
+        signal: "logs",
+        service: "checkout-api",
+        limit: 20,
+      },
+    ],
+    [
+      "traces pricing",
+      {
+        incidentId: "inc_checkout_20260827_001",
+        signal: "traces",
+        service: "pricing",
+        limit: 7,
+      },
+    ],
+  ])("accepts %s", (_name, input) => {
+    expect(querySignalsInputSchema.safeParse(input).success).toBe(true);
+  });
+
+  it.each([
+    [
+      "metrics pricing",
+      {
+        incidentId: "inc_checkout_20260827_001",
+        signal: "metrics",
+        service: "pricing",
+        limit: 2,
+      },
+    ],
+    [
+      "logs pricing",
+      {
+        incidentId: "inc_checkout_20260827_001",
+        signal: "logs",
+        service: "pricing",
+        limit: 1,
+      },
+    ],
+    [
+      "traces checkout",
+      {
+        incidentId: "inc_checkout_20260827_001",
+        signal: "traces",
+        service: "checkout-api",
+        limit: 1,
+      },
+    ],
+  ])("rejects %s", (_name, input) => {
+    expect(querySignalsInputSchema.safeParse(input).success).toBe(false);
   });
 });

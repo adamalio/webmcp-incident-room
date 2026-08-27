@@ -7,21 +7,47 @@ export interface TimelineEvent {
   timestamp: string;
 }
 
+export type QueryReceiptId = "qry_001" | "qry_002" | "qry_003" | "qry_004";
+
+interface IncidentStateBase {
+  timeline: TimelineEvent[];
+  latestStatus: string;
+  queryReceipts: Record<string, QueryReceiptId>;
+}
+
 export type IncidentState =
-  | { phase: "idle"; timeline: TimelineEvent[]; latestStatus: string }
-  | {
+  | ({ phase: "idle" } & IncidentStateBase)
+  | ({
       phase: "investigating";
-      timeline: TimelineEvent[];
-      latestStatus: string;
-    };
+    } & IncidentStateBase);
 
 export type IncidentCommand =
   | { type: "START" }
   | { type: "INSPECT"; receiptId: "ins_001" }
+  | { type: "QUERY"; receiptId: QueryReceiptId; queryKey: string }
+  | { type: "QUERY_REJECTED"; code: "INVALID_INPUT" | "INVALID_STATE" }
   | { type: "RESET" };
 
 export function createInitialIncidentState(): IncidentState {
-  return { phase: "idle", timeline: [], latestStatus: "Incident idle" };
+  return {
+    phase: "idle",
+    timeline: [],
+    latestStatus: "Incident idle",
+    queryReceipts: {},
+  };
+}
+
+function nextEvent(state: IncidentState, label: string, receiptId?: string) {
+  const ordinal = state.timeline.length + 1;
+  const previousTimestamp = state.timeline.at(-1)?.timestamp;
+  return {
+    id: `evt_${String(ordinal).padStart(3, "0")}`,
+    label,
+    ...(receiptId ? { receiptId } : {}),
+    timestamp: previousTimestamp
+      ? new Date(Date.parse(previousTimestamp) + 60_000).toISOString()
+      : checkoutIncident.startedAt,
+  };
 }
 
 export function incidentReducer(
@@ -34,28 +60,42 @@ export function incidentReducer(
     return {
       phase: "investigating",
       latestStatus: "Investigation started",
-      timeline: [
-        {
-          id: "evt_001",
-          label: "Investigation started",
-          timestamp: checkoutIncident.startedAt,
-        },
-      ],
+      queryReceipts: {},
+      timeline: [...state.timeline, nextEvent(state, "Investigation started")],
+    };
+  }
+  if (command.type === "QUERY_REJECTED") {
+    const label = `Signal query rejected · ${command.code}`;
+    return {
+      ...state,
+      latestStatus: label,
+      timeline: [...state.timeline, nextEvent(state, label)],
     };
   }
   if (state.phase !== "investigating") return state;
-  if (state.timeline.some((event) => event.id === "evt_002")) return state;
+  if (command.type === "QUERY") {
+    if (state.queryReceipts[command.queryKey]) return state;
+    return {
+      ...state,
+      latestStatus: `Signals queried · ${command.receiptId}`,
+      queryReceipts: {
+        ...state.queryReceipts,
+        [command.queryKey]: command.receiptId,
+      },
+      timeline: [
+        ...state.timeline,
+        nextEvent(state, "Signals queried", command.receiptId),
+      ],
+    };
+  }
+  if (state.timeline.some((event) => event.receiptId === command.receiptId))
+    return state;
   return {
     ...state,
     latestStatus: `Incident inspected · ${command.receiptId}`,
     timeline: [
       ...state.timeline,
-      {
-        id: "evt_002",
-        label: "Incident inspected",
-        receiptId: command.receiptId,
-        timestamp: "2026-08-27T16:01:00.000Z",
-      },
+      nextEvent(state, "Incident inspected", command.receiptId),
     ],
   };
 }

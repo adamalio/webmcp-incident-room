@@ -4,14 +4,17 @@ import {
   useMemo,
   useReducer,
   useRef,
+  useState,
 } from "react";
 import { IncidentTimeline } from "../components/IncidentTimeline";
+import { SignalExplorer } from "../components/SignalExplorer";
 import { checkoutIncident } from "../data/checkout-incident";
 import {
   createInitialIncidentState,
   incidentReducer,
 } from "../domain/incident-machine";
 import { createInspectIncidentHandler } from "../tools/inspect-incident";
+import { createQuerySignalsHandler } from "../tools/query-signals";
 import { useIncidentTools } from "../webmcp/useIncidentTools";
 import "./app.css";
 
@@ -22,16 +25,37 @@ export function App() {
     createInitialIncidentState,
   );
   const stateRef = useRef(state);
+  const [evidence, setEvidence] = useState<unknown>();
+  const dispatchSync = useCallback(
+    (command: Parameters<typeof incidentReducer>[1]) => {
+      stateRef.current = incidentReducer(stateRef.current, command);
+      dispatch(command);
+    },
+    [],
+  );
   useLayoutEffect(() => {
     stateRef.current = state;
   }, [state]);
-  const inspect = useCallback((input: unknown) => {
-    const handler = createInspectIncidentHandler(
-      () => stateRef.current,
-      dispatch,
-    );
-    return handler(input);
-  }, []);
+  const inspect = useCallback(
+    (input: unknown) => {
+      const handler = createInspectIncidentHandler(
+        () => stateRef.current,
+        dispatchSync,
+      );
+      return handler(input);
+    },
+    [dispatchSync],
+  );
+  const query = useCallback(
+    (input: unknown, options?: WebMCP.ToolExecuteCallbackOptions) => {
+      const handler = createQuerySignalsHandler(
+        () => stateRef.current,
+        dispatchSync,
+      );
+      return handler(input, options);
+    },
+    [dispatchSync],
+  );
   const unavailable = useCallback(
     () => ({
       ok: false,
@@ -46,10 +70,10 @@ export function App() {
   const handlers = useMemo(
     () => ({
       inspect_incident: inspect,
-      query_signals: unavailable,
+      query_signals: query,
       propose_mitigation: unavailable,
     }),
-    [inspect, unavailable],
+    [inspect, query, unavailable],
   );
   useIncidentTools(state, handlers);
 
@@ -66,7 +90,8 @@ export function App() {
         <button
           type="button"
           onClick={() => {
-            dispatch({ type: "RESET" });
+            setEvidence(undefined);
+            dispatchSync({ type: "RESET" });
           }}
         >
           Reset
@@ -105,7 +130,7 @@ export function App() {
             <button
               type="button"
               onClick={() => {
-                dispatch({ type: "START" });
+                dispatchSync({ type: "START" });
               }}
             >
               Start incident
@@ -130,6 +155,24 @@ export function App() {
         <p role="status" aria-live="polite" className="invocation-status">
           {state.latestStatus}
         </p>
+        {state.phase === "investigating" ? (
+          <SignalExplorer
+            evidence={
+              evidence && typeof evidence === "object" && "ok" in evidence ? (
+                <pre>{JSON.stringify(evidence, null, 2)}</pre>
+              ) : null
+            }
+            onSelect={(signal) => {
+              setEvidence(
+                query({
+                  incidentId: checkoutIncident.id,
+                  signal,
+                  limit: 20,
+                }),
+              );
+            }}
+          />
+        ) : null}
         <IncidentTimeline events={state.timeline} />
       </main>
 

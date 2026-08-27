@@ -1,4 +1,5 @@
 export interface ModelContextFake {
+  executable(name: string): WebMCP.ToolExecuteCallback;
   invoke(name: string, input: unknown): Promise<unknown>;
   registeredNames(): string[];
   restore(): void;
@@ -90,6 +91,11 @@ export function installModelContextFake(
   });
 
   return {
+    executable(name) {
+      const tool = registrations.get(name);
+      if (!tool) throw new Error(`Tool is not registered: ${name}`);
+      return tool.execute;
+    },
     invoke(name, input) {
       const tool = registrations.get(name);
       if (!tool) throw new Error(`Tool is not registered: ${name}`);

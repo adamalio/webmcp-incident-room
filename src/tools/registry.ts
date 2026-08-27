@@ -43,6 +43,7 @@ export function getIncidentTools(
       name: "query_signals",
       description: "Query bounded synthetic incident signals.",
       inputSchema: z.toJSONSchema(querySignalsInputSchema),
+      annotations: { readOnlyHint: true, untrustedContentHint: true },
       execute: handlers.query_signals ?? unavailable,
     },
     {

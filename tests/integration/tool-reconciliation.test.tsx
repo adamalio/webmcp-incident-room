@@ -34,7 +34,7 @@ interface RegistrationRecord {
 function Harness() {
   const [phase, setPhase] = useState<IncidentState["phase"]>("idle");
   const capability = useIncidentTools(
-    { phase, timeline: [], latestStatus: phase },
+    { phase, timeline: [], latestStatus: phase, queryReceipts: {} },
     {
       inspect_incident: vi.fn(),
       query_signals: vi.fn(),
@@ -72,7 +72,7 @@ function AtomicHandlerHarness({
   const [value, setValue] = useState("investigating");
   const [inspectAfterCommit, setInspectAfterCommit] = useState(false);
   useIncidentTools(
-    { phase: "idle", timeline: [], latestStatus: value },
+    { phase: "idle", timeline: [], latestStatus: value, queryReceipts: {} },
     {
       inspect_incident: () => value,
       query_signals: vi.fn(),

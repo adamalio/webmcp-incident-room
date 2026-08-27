@@ -116,6 +116,363 @@
     ],
     "additionalProperties": false
   },
+  "query_signals": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "anyOf": [
+      {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "const": true
+          },
+          "receiptId": {
+            "type": "string",
+            "enum": [
+              "qry_001",
+              "qry_002",
+              "qry_003",
+              "qry_004"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "const": "investigating"
+          },
+          "summary": {
+            "type": "string",
+            "enum": [
+              "Returned 1 bounded synthetic metrics for checkout-api.",
+              "Returned 2 bounded synthetic metrics for checkout-api."
+            ]
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "signal": {
+                "type": "string",
+                "const": "metrics"
+              },
+              "service": {
+                "type": "string",
+                "const": "checkout-api"
+              },
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "const": "met_001"
+                          },
+                          "timestamp": {
+                            "type": "string",
+                            "const": "2026-08-27T16:00:00.000Z"
+                          },
+                          "name": {
+                            "type": "string",
+                            "const": "checkout.p95_latency_ms"
+                          },
+                          "value": {
+                            "type": "number",
+                            "const": 4820
+                          },
+                          "unit": {
+                            "type": "string",
+                            "const": "ms"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "timestamp",
+                          "name",
+                          "value",
+                          "unit"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ],
+                    "items": {
+                      "not": {}
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "const": "met_001"
+                          },
+                          "timestamp": {
+                            "type": "string",
+                            "const": "2026-08-27T16:00:00.000Z"
+                          },
+                          "name": {
+                            "type": "string",
+                            "const": "checkout.p95_latency_ms"
+                          },
+                          "value": {
+                            "type": "number",
+                            "const": 4820
+                          },
+                          "unit": {
+                            "type": "string",
+                            "const": "ms"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "timestamp",
+                          "name",
+                          "value",
+                          "unit"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "const": "met_002"
+                          },
+                          "timestamp": {
+                            "type": "string",
+                            "const": "2026-08-27T16:00:30.000Z"
+                          },
+                          "name": {
+                            "type": "string",
+                            "const": "checkout.error_rate_percent"
+                          },
+                          "value": {
+                            "type": "number",
+                            "const": 8.4
+                          },
+                          "unit": {
+                            "type": "string",
+                            "const": "percent"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "timestamp",
+                          "name",
+                          "value",
+                          "unit"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ],
+                    "items": {
+                      "not": {}
+                    }
+                  }
+                ]
+              }
+            },
+            "required": [
+              "signal",
+              "service",
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "ok",
+          "receiptId",
+          "state",
+          "summary",
+          "data"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "const": true
+          },
+          "receiptId": {
+            "type": "string",
+            "enum": [
+              "qry_001",
+              "qry_002",
+              "qry_003",
+              "qry_004"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "const": "investigating"
+          },
+          "summary": {
+            "type": "string",
+            "const": "Returned 1 bounded synthetic traces for pricing."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "signal": {
+                "type": "string",
+                "const": "traces"
+              },
+              "service": {
+                "type": "string",
+                "const": "pricing"
+              },
+              "items": {
+                "minItems": 1,
+                "maxItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "const": "trc_001"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "const": "2026-08-27T16:00:12.000Z"
+                    },
+                    "durationMs": {
+                      "type": "number",
+                      "const": 4872
+                    },
+                    "status": {
+                      "type": "string",
+                      "const": "error"
+                    },
+                    "summary": {
+                      "type": "string",
+                      "const": "pricing request timed out after 250 ms; checkout retried"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "timestamp",
+                    "durationMs",
+                    "status",
+                    "summary"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "signal",
+              "service",
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "ok",
+          "receiptId",
+          "state",
+          "summary",
+          "data"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "const": true
+          },
+          "receiptId": {
+            "type": "string",
+            "enum": [
+              "qry_001",
+              "qry_002",
+              "qry_003",
+              "qry_004"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "const": "investigating"
+          },
+          "summary": {
+            "type": "string",
+            "const": "Returned 1 bounded synthetic logs for checkout-api."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "signal": {
+                "type": "string",
+                "const": "logs"
+              },
+              "service": {
+                "type": "string",
+                "const": "checkout-api"
+              },
+              "items": {
+                "minItems": 1,
+                "maxItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "const": "log_001"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "const": "2026-08-27T16:00:14.000Z"
+                    },
+                    "level": {
+                      "type": "string",
+                      "const": "warn"
+                    },
+                    "message": {
+                      "type": "string",
+                      "const": "SYNTHETIC UNTRUSTED LOG DATA: </script><script>alert('incident')</script> pricing timeout; retry=3"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "timestamp",
+                    "level",
+                    "message"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "signal",
+              "service",
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "ok",
+          "receiptId",
+          "state",
+          "summary",
+          "data"
+        ],
+        "additionalProperties": false
+      }
+    ]
+  },
   "failure": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
