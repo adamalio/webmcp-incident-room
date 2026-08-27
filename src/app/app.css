@@ -103,6 +103,18 @@ footer {
   box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 20%);
 }
 
+.capability-banner {
+  margin-top: 1.5rem;
+  padding: 0.85rem 1rem;
+  color: #d8e5f2;
+  background: #18283a;
+  border-left: 0.25rem solid #d8a657;
+}
+
+.capability-banner a {
+  color: #86ddcf;
+}
+
 .status {
   padding: 0.35rem 0.7rem;
   color: #e8edf7;
@@ -112,17 +124,55 @@ footer {
   font-weight: 800;
 }
 
-.incident-details {
+.incident-details,
+.impact-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
   gap: 1rem;
   margin: 2rem 0 0;
 }
 
-.incident-details div {
+.incident-details div,
+.impact-grid div {
   padding: 1rem;
   background: #0b1726;
   border-radius: 0.5rem;
+}
+
+.incident-card > button {
+  margin-top: 1.5rem;
+}
+
+.invocation-status {
+  min-height: 1.5rem;
+  margin: 1.5rem 0 0;
+  color: #aebed0;
+}
+
+.timeline-card {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background: rgb(16 31 51 / 90%);
+  border: 1px solid #263d57;
+  border-radius: 0.85rem;
+}
+
+.timeline-card ol {
+  margin: 1.25rem 0 0;
+  padding-left: 1.4rem;
+}
+
+.timeline-card li {
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+.timeline-card code,
+.timeline-card time {
+  display: block;
+  margin-top: 0.25rem;
+  color: #8fa6bc;
+  font-size: 0.8rem;
 }
 
 dt {

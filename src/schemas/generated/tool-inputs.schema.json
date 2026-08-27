@@ -1,0 +1,75 @@
+{
+  "inspect_incident": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "incidentId": {
+        "type": "string",
+        "const": "inc_checkout_20260827_001",
+        "description": "The canonical synthetic incident ID."
+      }
+    },
+    "required": [
+      "incidentId"
+    ],
+    "additionalProperties": false
+  },
+  "query_signals": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "incidentId": {
+        "type": "string",
+        "const": "inc_checkout_20260827_001"
+      },
+      "signal": {
+        "type": "string",
+        "enum": [
+          "metrics",
+          "traces",
+          "logs"
+        ]
+      },
+      "service": {
+        "type": "string",
+        "enum": [
+          "edge",
+          "checkout-api",
+          "pricing",
+          "payments",
+          "orders-db"
+        ]
+      },
+      "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      }
+    },
+    "required": [
+      "incidentId",
+      "signal",
+      "limit"
+    ],
+    "additionalProperties": false
+  },
+  "propose_mitigation": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "incidentId": {
+        "type": "string",
+        "const": "inc_checkout_20260827_001"
+      },
+      "mitigation": {
+        "type": "string",
+        "const": "restore_pricing_timeout"
+      }
+    },
+    "required": [
+      "incidentId",
+      "mitigation"
+    ],
+    "additionalProperties": false
+  }
+}

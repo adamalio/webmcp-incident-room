@@ -1,0 +1,164 @@
+{
+  "inspect_incident": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "ok": {
+        "type": "boolean",
+        "const": true
+      },
+      "receiptId": {
+        "type": "string",
+        "const": "ins_001"
+      },
+      "state": {
+        "type": "string",
+        "const": "investigating"
+      },
+      "summary": {
+        "type": "string",
+        "const": "Synthetic checkout impact is active across checkout-api and pricing."
+      },
+      "data": {
+        "type": "object",
+        "properties": {
+          "impact": {
+            "type": "object",
+            "properties": {
+              "p95LatencyMs": {
+                "type": "number",
+                "const": 4820
+              },
+              "errorRatePercent": {
+                "type": "number",
+                "const": 8.4
+              },
+              "affectedSessions": {
+                "type": "number",
+                "const": 1284
+              },
+              "abandonedCheckouts": {
+                "type": "number",
+                "const": 312
+              },
+              "syntheticRevenueAtRiskUsd": {
+                "type": "number",
+                "const": 46800
+              }
+            },
+            "required": [
+              "p95LatencyMs",
+              "errorRatePercent",
+              "affectedSessions",
+              "abandonedCheckouts",
+              "syntheticRevenueAtRiskUsd"
+            ],
+            "additionalProperties": false
+          },
+          "services": {
+            "allOf": [
+              {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "string",
+                    "const": "edge"
+                  },
+                  {
+                    "type": "string",
+                    "const": "checkout-api"
+                  },
+                  {
+                    "type": "string",
+                    "const": "pricing"
+                  },
+                  {
+                    "type": "string",
+                    "const": "payments"
+                  },
+                  {
+                    "type": "string",
+                    "const": "orders-db"
+                  }
+                ]
+              },
+              {
+                "minItems": 5,
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "edge",
+                    "checkout-api",
+                    "pricing",
+                    "payments",
+                    "orders-db"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "impact",
+          "services"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "ok",
+      "receiptId",
+      "state",
+      "summary",
+      "data"
+    ],
+    "additionalProperties": false
+  },
+  "failure": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "ok": {
+        "type": "boolean",
+        "const": false
+      },
+      "error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "INVALID_INPUT",
+              "INVALID_STATE",
+              "INTERNAL_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "retryable": {
+            "type": "boolean"
+          },
+          "expectedState": {
+            "type": "string",
+            "maxLength": 40
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "retryable"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "ok",
+      "error"
+    ],
+    "additionalProperties": false
+  }
+}
