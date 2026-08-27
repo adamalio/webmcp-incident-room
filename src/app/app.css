@@ -1,0 +1,163 @@
+:root {
+  color: #e8edf7;
+  background: #08111f;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgb(27 78 109 / 32%),
+      transparent 35rem
+    ),
+    #08111f;
+}
+
+button {
+  align-self: start;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.1rem;
+  color: #f7fbff;
+  background: transparent;
+  border: 1px solid #62809e;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 3px solid #62d6c5;
+  outline-offset: 3px;
+}
+
+.app-shell {
+  width: min(72rem, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 3rem 0 2rem;
+}
+
+.incident-header,
+.incident-summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.eyebrow,
+.section-label {
+  margin: 0 0 0.65rem;
+  color: #62d6c5;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0.6rem;
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  line-height: 1;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.subtitle,
+footer {
+  color: #aebed0;
+}
+
+.incident-card {
+  margin-top: 3rem;
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+  background: rgb(16 31 51 / 90%);
+  border: 1px solid #263d57;
+  border-radius: 0.85rem;
+  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 20%);
+}
+
+.status {
+  padding: 0.35rem 0.7rem;
+  color: #e8edf7;
+  background: #2a3d52;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.incident-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.incident-details div {
+  padding: 1rem;
+  background: #0b1726;
+  border-radius: 0.5rem;
+}
+
+dt {
+  margin-bottom: 0.35rem;
+  color: #8fa6bc;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+footer {
+  padding-top: 1.5rem;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 36rem) {
+  .app-shell {
+    padding-top: 1.5rem;
+  }
+
+  .incident-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
