@@ -34,7 +34,7 @@ Do not add a second incident, remote backend, chatbot, authentication, live obse
 
 - Node.js 22 LTS, npm, committed `package-lock.json`, and an `engines.node` constraint.
 - Vite, React, React DOM, strict TypeScript, and CSS modules or plain colocated CSS (no runtime CSS framework required).
-- Zod as the single runtime contract source and `zod-to-json-schema` (or the current maintained Zod-native equivalent selected and pinned before implementation) to generate JSON Schema.
+- Zod 4 as the single runtime contract source and its native `z.toJSONSchema(...)` API to generate JSON Schema. Do not add the deprecated `zod-to-json-schema` compatibility package.
 - Vitest + jsdom + Testing Library + `@testing-library/user-event` + `@testing-library/jest-dom`.
 - Playwright with Chromium, Firefox, and WebKit for human UI; a separate Chromium/native-WebMCP manual or supported headed lane for genuine discovery and invocation.
 - ESLint with TypeScript and React rules, Prettier, and `tsc --noEmit`.
@@ -44,7 +44,7 @@ Initial scaffold commands (run only when implementation begins):
 
 ```bash
 npm create vite@latest . -- --template react-ts
-npm install zod zod-to-json-schema
+npm install zod
 npm install -D vitest jsdom @testing-library/react @testing-library/user-event @testing-library/jest-dom @playwright/test eslint prettier
 npx playwright install --with-deps chromium firefox webkit
 ```
